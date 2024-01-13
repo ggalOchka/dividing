@@ -1,0 +1,109 @@
+/**
+ * src/styles/settings.scss
+ *
+ * Configures SASS variables and Vuetify overwrites
+ */
+
+
+@use 'vuetify/settings' with (
+   $color-pack: true,
+ //  background-color: #D9C6B7
+
+ );
+
+ $primary-color: rgb(var(--v-theme-primary));
+ $secondary-color: rgb(var(--v-theme-secondary));
+ $background-color: rgb(var(--v-theme-background));
+ $text-color: rgb(var(--v-theme-text));
+
+body {
+  color: $text-color !important;
+ 
+}
+
+.v-card {
+  font-size:x-large;
+  margin-top: 15px;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .v-text-field{
+    width:70%;
+  }
+  .v-btn{
+    margin-bottom: 10px;
+  }
+}
+.v-container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.special-text {
+  color: $background-color;
+}
+
+.v-card-dish{
+  font-size:x-large;
+  margin: 0 auto;
+  width: 75%;
+  display: flex;
+  flex-direction:column;
+  align-items: center;
+  .v-text-field{
+    color: $background-color;
+  }
+}
+
+.v-card-text-field{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 100%;
+  gap: 20px;
+}
+.v-select{
+  color: $text-color;
+  background-color: $text-color;  
+}
+
+
+.v-card-btn{
+  .v-btn-toggle{
+    flex-wrap: wrap; 
+    height: 100%;
+    .v-btn{
+      border-radius: 2px;
+      background-color: #D9C6B7;
+      color: $primary-color;     
+    }
+    .div{
+      flex-direction: column;
+      justify-content: space-around;
+      gap: 5px;
+    }
+  }
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 100%;
+  gap: 20px;
+}
+
+.v-avatar{
+  margin-bottom:10px;
+}
+.result{
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+.h4-dish-page{
+  font: {
+    size: 30px;
+    family: 'Courier New', Courier, monospace;
+  }
+  .h4-red{
+    color:$secondary-color;
+  }
+}
