@@ -18,7 +18,6 @@
   
 <script setup>
 import { onMounted, onUpdated} from 'vue'
-//import { v4 as uuidv4 } from 'uuid';
 import {useRouter} from 'vue-router'
 import { useAppStore } from '@/store/users.js'
 import { ref } from 'vue'

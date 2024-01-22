@@ -85,13 +85,13 @@ const loadUsersData = () => {
   const dataTotal = loadFromLocalStorage(keyTotalPrice)
   if(dataTotal) {
     totalPrice.value = dataTotal
-    console.log(dataTotal)
   }
   for(let i = 0; i<dishData.value.length; i++){
     userStore.addUserDish(dishData.value[i].name, dishData.value[i].price, dishData.value[i].whoEat, dishData.value[i].whoEatMatrix)
   }
 }
 
+//обновление массива данных при изменении или добавлении данных
 const updateDishData = (index, newVal) => {
   dishData.value[index].name = newVal[0]
   dishData.value[index].price = newVal[1]
@@ -101,13 +101,14 @@ const updateDishData = (index, newVal) => {
   totalPrice.value = Number(totalPrice.value) + Number(newVal[1])
   saveToLocalStorage(key, dishData.value)
   saveToLocalStorage(keyTotalPrice, totalPrice.value)
-  console.log(dishData.value)
 }
 
 const userData = ref(userStore.onlyUserNames)
+
 const totalPrice = ref(loadFromLocalStorage(keyTotalPrice) || 0)
-console.log(totalPrice.value)
 const dishData = ref(loadFromLocalStorage(key) || [{ name: '', id: 0, price: 0, payer: '', whoEat: [], whoEatMatrix: []}])
+
+// добавление нового блюда (выделение места в массиве для v-for)
 const addDish = () => {
   const newDishId = uuidv4()
   dishData.value.push({
@@ -121,6 +122,7 @@ const addDish = () => {
   saveToLocalStorage(key, dishData.value)
 }
 
+//удаление блюда
 const handleDeleteDish = (indexToDelete) => { 
   if (indexToDelete !== -1) {
     totalPrice.value = Number(totalPrice.value) - Number(dishData.value[indexToDelete].price)

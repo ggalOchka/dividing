@@ -45,6 +45,7 @@ onUpdated(() => {
   loadUsersData()
 })
 
+//сохраняем данные в localStorage
 const saveToLocalStorage = (key, data) => {
   localStorage.setItem(key, JSON.stringify(data))
 }
@@ -55,6 +56,7 @@ const loadFromLocalStorage = (key) => {
   return data ? JSON.parse(data) : null
 }
 
+//вышружаем данные из localStorage
 const loadUsersData = () => {
   userStore.deleteAllNames()
   const data = loadFromLocalStorage(key)
@@ -66,6 +68,7 @@ const loadUsersData = () => {
   }
 }
 
+//добавление данных о новом пользователе в массив (и сохранение в localStorage)
 const updateUsersArrs = (index, newVal) => {
   usersArrs.value[index].name = newVal
   saveToLocalStorage(key, usersArrs.value)
@@ -76,6 +79,7 @@ const key = 'usersData'
 // Загрузка данных из localStorage при инициализации
 const usersArrs = ref(loadFromLocalStorage(key) || [{ id: 0, name: '' }])
 
+// добавление нового пользователя (выделение места в массиве для v-for)
 const addUser = () => {
   const newUserId = uuidv4()
   usersArrs.value.push({
@@ -86,6 +90,7 @@ const addUser = () => {
   saveToLocalStorage(key, usersArrs.value)
 }
 
+// удаление введенного пользователя
 const handleDeleteUser = (indexToDelete) => { 
   if (indexToDelete !== -1) {
     userStore.deleteUser(usersArrs.value[indexToDelete].name)
