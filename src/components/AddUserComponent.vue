@@ -1,18 +1,20 @@
 <template>
   <v-text-field 
-      label="Имя пользователя"
-      variant="underlined"
-      :autofocus="false" 
-      v-model="userName"
-      @blur="handleInputEnd">
-      <template v-slot:prepend>
-        <v-avatar color="primary">{{ userName.slice(0,4)}}</v-avatar>
+    label="Имя пользователя"
+    variant="underlined"
+    :autofocus="false" 
+    v-model="userName"
+    @blur="handleInputEnd"
+  >
+    <template v-slot:prepend>
+      <v-avatar color="primary">{{ userName.slice(0,4)}}</v-avatar>
     </template>
     <template v-slot:append>
       <v-btn 
         icon="mdi-knife" 
         color="secondary"
-        @click="deleteUser(userName)"/>
+        @click="deleteUser(userName)"
+      />
     </template>
   </v-text-field>
 </template>
@@ -22,14 +24,13 @@ import { ref, watch } from 'vue'
 import { useAppStore } from '@/store/users.js'
 const userName = ref(props.propsName)
 const emits = defineEmits()
+const userStore = useAppStore()
 const props = defineProps({
   propsName: {
     type: String,
     default: 'name'
   }
 })
-const userStore = useAppStore()
-
 watch(userName, function() {
   emits('update:propsName', userName.value)
 })

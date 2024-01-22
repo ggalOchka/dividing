@@ -1,18 +1,12 @@
 <template>
   <div class="app">
-  <v-app>
-    
-    <header
-      class="header"
-    >
-      <h3>Поделим счет?</h3>
-
-    </header>
-
-    <router-view/>
-
-  </v-app>
- </div>
+    <v-app>
+      <header class="header">
+        <h3>Поделим счет?</h3>
+      </header>
+      <router-view/>
+    </v-app>
+  </div>
 </template>
 
 <script setup>

@@ -1,24 +1,15 @@
-/**
- * src/styles/settings.scss
- *
- * Configures SASS variables and Vuetify overwrites
- */
-
-
 @use 'vuetify/settings' with (
-   $color-pack: true,
+  $color-pack: true,
  //  background-color: #D9C6B7
+);
 
- );
-
- $primary-color: rgb(var(--v-theme-primary));
- $secondary-color: rgb(var(--v-theme-secondary));
- $background-color: rgb(var(--v-theme-background));
- $text-color: rgb(var(--v-theme-text));
+$primary-color: rgb(var(--v-theme-primary)); 
+$secondary-color: rgb(var(--v-theme-secondary));
+$background-color: rgb(var(--v-theme-background));
+$text-color: rgb(var(--v-theme-text));
 
 body {
   color: $text-color !important;
- 
 }
 
 .v-card {
@@ -35,11 +26,13 @@ body {
     margin-bottom: 10px;
   }
 }
+
 .v-container{
   display: flex;
   flex-direction: column;
   align-items: center;
 }
+
 .special-text {
   color: $background-color;
 }
@@ -63,11 +56,11 @@ body {
   width: 100%;
   gap: 20px;
 }
+
 .v-select{
   color: $text-color;
   background-color: $text-color;  
 }
-
 
 .v-card-btn{
   .v-btn-toggle{
@@ -94,10 +87,12 @@ body {
 .v-avatar{
   margin-bottom:10px;
 }
+
 .result{
   margin-top: 15px;
   margin-bottom: 15px;
 }
+
 .h4-dish-page{
   font: {
     size: 30px;
