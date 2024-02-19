@@ -1,5 +1,3 @@
-
-
 // Components
 import App from './App.vue'
 
@@ -9,7 +7,6 @@ import { createApp } from 'vue'
 // Plugins
 import { registerPlugins } from '@/plugins'
 import '@/styles/settings.scss'
-
 
 const app = createApp(App)
 

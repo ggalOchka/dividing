@@ -14,14 +14,14 @@ export default createVuetify({
       light: {
         dark: false,
         colors: {
-          "on-surface": '#156F15',
-          "on-background": '#156F15',
+          'on-surface': '#156F15',
+          'on-background': '#156F15',
           background: '#D9C6B7',
           surface: '#CCB19C',
           primary: '#156F15',
-          secondary: '#c15e11',
-        },
-      },
-    },
-  },
+          secondary: '#c15e11'
+        }
+      }
+    }
+  }
 })

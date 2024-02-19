@@ -17,17 +17,17 @@ export default defineConfig({
     vuetify({
       autoImport: true,
       styles: {
-        configFile: 'src/styles/settings.scss',
-      },
+        configFile: 'src/styles/settings.scss'
+      }
     }),
     ViteFonts({
       google: {
         families: [{
           name: 'Roboto',
-          styles: 'wght@100;300;400;500;700;900',
-        }],
-      },
-    }),
+          styles: 'wght@100;300;400;500;700;900'
+        }]
+      }
+    })
   ],
   define: { 'process.env': {} },
   resolve: {
@@ -42,9 +42,9 @@ export default defineConfig({
       '.ts',
       '.tsx',
       '.vue',
-    ],
+    ]
   },
   server: {
-    port: 3000,
-  },
+    port: 3000
+  }
 })

@@ -1,9 +1,8 @@
-@use 'vuetify/settings' with (
-  $color-pack: true,
- //  background-color: #D9C6B7
+@use 'vuetify/settings' with ($color-pack: true,
+  //  background-color: #D9C6B7
 );
 
-$primary-color: rgb(var(--v-theme-primary)); 
+$primary-color: rgb(var(--v-theme-primary));
 $secondary-color: rgb(var(--v-theme-secondary));
 $background-color: rgb(var(--v-theme-background));
 $text-color: rgb(var(--v-theme-text));
@@ -13,21 +12,23 @@ body {
 }
 
 .v-card {
-  font-size:x-large;
+  font-size: x-large;
   margin-top: 15px;
   width: 50%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  .v-text-field{
-    width:70%;
+
+  .v-text-field {
+    width: 70%;
   }
-  .v-btn{
+
+  .v-btn {
     margin-bottom: 10px;
   }
 }
 
-.v-container{
+.v-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -37,19 +38,20 @@ body {
   color: $background-color;
 }
 
-.v-card-dish{
-  font-size:x-large;
+.v-card-dish {
+  font-size: x-large;
   margin: 0 auto;
   width: 75%;
   display: flex;
-  flex-direction:column;
+  flex-direction: column;
   align-items: center;
-  .v-text-field{
+
+  .v-text-field {
     color: $background-color;
   }
 }
 
-.v-card-text-field{
+.v-card-text-field {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
@@ -57,26 +59,29 @@ body {
   gap: 20px;
 }
 
-.v-select{
+.v-select {
   color: $text-color;
-  background-color: $text-color;  
+  background-color: $text-color;
 }
 
-.v-card-btn{
-  .v-btn-toggle{
-    flex-wrap: wrap; 
+.v-card-btn {
+  .v-btn-toggle {
+    flex-wrap: wrap;
     height: 100%;
-    .v-btn{
+
+    .v-btn {
       border-radius: 2px;
       background-color: #D9C6B7;
-      color: $primary-color;     
+      color: $primary-color;
     }
-    .div{
+
+    .div {
       flex-direction: column;
       justify-content: space-around;
       gap: 5px;
     }
   }
+
   display: flex;
   flex-direction: row;
   justify-content: space-around;
@@ -84,21 +89,22 @@ body {
   gap: 20px;
 }
 
-.v-avatar{
-  margin-bottom:10px;
+.v-avatar {
+  margin-bottom: 10px;
 }
 
-.result{
+.result {
   margin-top: 15px;
   margin-bottom: 15px;
 }
 
-.h4-dish-page{
+.h4-dish-page {
   font: {
     size: 30px;
     family: 'Courier New', Courier, monospace;
   }
-  .h4-red{
-    color:$secondary-color;
+
+  .h4-red {
+    color: $secondary-color;
   }
 }
