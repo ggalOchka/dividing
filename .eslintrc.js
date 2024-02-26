@@ -5,7 +5,7 @@ module.exports = {
   },
   extends: [
     'standard',
-    'plugin:vue/vue3-essential'
+    'plugin:vue/vue3-recommended'
   ],
   overrides: [
     {
@@ -28,5 +28,25 @@ module.exports = {
     'vue'
   ],
   rules: {
+    'vue/attributes-order': ['error', {
+      order: [
+        'DEFINITION',
+        'LIST_RENDERING',
+        'CONDITIONALS',
+        'RENDER_MODIFIERS',
+        'GLOBAL',
+        ['UNIQUE', 'SLOT'],
+        'TWO_WAY_BINDING',
+        'OTHER_DIRECTIVES',
+        'OTHER_ATTR',
+        'EVENTS',
+        'CONTENT'
+      ],
+      alphabetical: false
+    }],
+    'vue/v-on-event-hyphenation': ['error', 'always', {
+      autofix: false,
+      ignore: []
+    }]
   }
 }

@@ -1,43 +1,41 @@
 <template>
   <v-container>
-    <div v-for="(outputMatrixName, id) in outputMatrixNames" :key="id">
+    <div 
+      v-for="(outputMatrixName, id) in outputMatrixNames" 
+      :key="id"
+    >
       <h3 class="result">{{ outputMatrixName }}</h3>
     </div>
     <div>
       <v-btn
-        @click="deleteInfoDish"
+        text="К блюдам"
+        @click="onClickInfoDish"
+        class="navigationBtn"
         prepend-icon="mdi-arrow-left"
         size="default"
-      >
-        К блюдам
-      </v-btn>
+      />
       <v-btn
-        @click="deleteInfoHome"
+        text="На главную"
+        @click="onClickInfoHome"
+        class="navigationBtn"
         append-icon="mdi-arrow-right"
         size="default"
-      >
-        На главную
-      </v-btn>
+      />
     </div>
   </v-container>
 </template>
   
 <script setup>
-import { onMounted, onUpdated, reactive } from "vue";
+import { onMounted, onUpdated, ref} from "vue";
 import { useRouter } from "vue-router";
 import { useAppStore } from "@/store/users.js";
-import { ref } from "vue";
+import {saveToLocalStorage, loadFromLocalStorage} from "@/localStore.js";
 const store = useAppStore();
 const names = ref(store.onlyUserNames);
+const storeMatrixForTotal = ref(store.matrixForTotal);
 const router = useRouter();
 const total = ref([]);
 const key = "usersCalculate";
-
-const loadFromLocalStorage = (key) => {
-  const data = localStorage.getItem(key);
-  return data ? JSON.parse(data) : null;
-};
-
 const outputMatrixNames = ref(loadFromLocalStorage(key) || []);
 
 onMounted(() => {
@@ -49,10 +47,6 @@ onUpdated(() => {
   loadUsersData();
 });
 
-const saveToLocalStorage = (key, data) => {
-  localStorage.setItem(key, JSON.stringify(data));
-};
-
 const loadUsersData = () => {
   const data = loadFromLocalStorage(key);
   if (data) {
@@ -60,6 +54,10 @@ const loadUsersData = () => {
   }
 };
 
+loadUsersData();
+
+if (storeMatrixForTotal.value.length !== 0){
+  outputMatrixNames.value=[]
 for (let i = 0; i < names.value.length; i++) {
   total.value[i] = [];
   for (let j = 0; j < names.value.length; j++) {
@@ -69,7 +67,7 @@ for (let i = 0; i < names.value.length; i++) {
 
 for (let i = 0; i < names.value.length; i++) {
   for (let j = 0; j < names.value.length; j++) {
-    total.value[i][j] = total.value[i][j] + store.matrixForTotal[i][j];
+    total.value[i][j] = total.value[i][j] + storeMatrixForTotal.value[i][j];
   }
 }
 
@@ -122,31 +120,19 @@ for (let i = 0; i < total.value.length; i++) {
   countArr = [];
   counter = 0;
 }
+};
 
-const deleteInfoHome = () => {
+const onClickInfoHome = () => {
   router.push({ name: "home" });
-  outputMatrixNames.value.splice(0);
   localStorage.removeItem(key);
   total.value.splice(0);
   store.deleteMatrixForTotal();
 };
 
-const deleteInfoDish = () => {
+const onClickInfoDish = () => {
   router.push({ name: "dish" });
-  outputMatrixNames.value.splice(0);
   localStorage.removeItem(key);
   total.value.splice(0);
   store.deleteMatrixForTotal();
 };
 </script>
-  
-
-<style scoped lang="scss">
-.v-btn {
-  margin: {
-    left: 5px;
-    right: 5px;
-  }
-  width: 12em;
-}
-</style>

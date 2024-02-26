@@ -20,14 +20,8 @@ export const useAppStore = defineStore('app', {
     deleteAllNames () {
       this.onlyUserNames.splice(0)
     },
-    addUserDish (dishName, dishPrice, whoPay, whoEat, whoEatMatrix) {
-      this.usersDish.push({
-        dishName: dishName,
-        dishPrice: dishPrice,
-        whoPay: whoPay,
-        whoEat: whoEat,
-        whoEatMatrix: whoEatMatrix
-      })
+    addUserDish (dish) {
+      this.usersDish.push(dish)
     },
     initMatrixForTotal (usersCount) {
       this.matrixForTotal = new Array(usersCount)

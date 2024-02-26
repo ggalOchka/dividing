@@ -1,35 +1,47 @@
 <template>
   <v-text-field
-    v-model="userName"
+    v-model.trim="userName"
     label="Имя пользователя"
     variant="underlined"
     :autofocus="false"
+    :rules="rules"
   >
-    <template v-slot:prepend>
+    <template #prepend>
       <v-avatar color="primary">{{ userName.slice(0, 4) }}</v-avatar>
     </template>
-    <template v-slot:append>
-      <v-btn @click="deleteUser" icon="mdi-knife" color="secondary" />
+    <template #append>
+      <v-btn 
+        @click="onClickDeleteUser" 
+        icon="mdi-knife" 
+        color="secondary" 
+      />
     </template>
   </v-text-field>
 </template>
 
 <script setup>
 import { ref, watch } from "vue";
-import { useAppStore } from "@/store/users.js";
 const userName = ref(props.propsName);
 const emits = defineEmits(["update:propsName", "deleteUser"]);
-const userStore = useAppStore();
 const props = defineProps({
   propsName: {
     type: String,
     default: "name",
   },
 });
-watch(userName, function () {
+
+watch(
+  userName, 
+  () => {
   emits("update:propsName", userName.value);
-});
-const deleteUser = (userName) => {
+  }
+);
+
+const onClickDeleteUser = (userName) => {
   emits("deleteUser", userName.value);
 };
+
+const rules = [
+  (v) => !!v || "Это поле обязательно"
+];
 </script>

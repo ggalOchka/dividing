@@ -1,92 +1,68 @@
 <template>
   <v-container>
-    <v-btn size="default" @click="addDish"> Добавить блюдо </v-btn>
+    <v-btn 
+      text="Добавить блюдо"
+      @click="onClickAddDish"
+      size="default" 
+      class="navigationBtn"
+    />
     <dish-card
       v-for="(dish, index) in dishData"
       :key="dish.id"
-      :propsDishData="dish"
-      :propsIsTouchNextPage="isTouchNextPage"
-      @update:propsDishData="(newVal) => updateDishData(index, newVal)"
+      :props-dish-data="dish"
+      :props-is-touch-next-page="isTouchNextPage"
+      @update:props-dish-data="(newVal) => updateDishData(index, newVal)"
       @deleteDish="handleDeleteDish(index)"
     />
     <div>
       <v-btn
+        text="Назад"
         @click="router.push({ name: 'home' })"
         prepend-icon="mdi-arrow-left"
         size="default"
-      >
-        Назад
-      </v-btn>
+        class="navigationBtn"
+      />
       <v-btn
-        v-if="isDishesAdd"
-        @click="clickCalculationPage"
+        :disabled="!(isDishesAdd && isRigt)"
+        text="Рассчитать"
+        @click="onClickCalculationPage"
         append-icon="mdi-arrow-right"
         size="default"
-      >
-        Рассчитать
-      </v-btn>
-      <v-btn
-        v-else
-        disabled
-        @click="clickCalculationPage"
-        append-icon="mdi-arrow-right"
-        size="default"
-      >
-        Рассчитать
-      </v-btn>
+        class="navigationBtn"
+      />
     </div>
     <v-card class="h4-dish-page">
       <h4>Итог:</h4>
-      <h4 class="h4-red">{{ getTotalPrice }}</h4>
+      <h4 class="h4-red">{{ totalPriceOnDisplay }}</h4>
     </v-card>
   </v-container>
 </template>
   
 <script setup>
-import { onMounted, onUpdated, computed } from "vue";
+import { onMounted, onUpdated, computed, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useAppStore } from "@/store/users.js";
-import { ref } from "vue";
 import dishCard from "./DishCard.vue";
 import { v4 as uuidv4 } from "uuid";
+import {saveToLocalStorage, loadFromLocalStorage} from "@/localStore.js";
 const key = "dishesData";
 const keyTotalPrice = "totalPrice";
 const userStore = useAppStore();
 const router = useRouter();
 const isTouchNextPage = ref(false);
-const isDishesAdd = ref(false);
+const isRigt = ref(false);
+
 onMounted(() => {
   isTouchNextPage.value = false;
-  //localStorage.removeItem(key)
   if (!localStorage.getItem(key)) {
-    saveToLocalStorage(
-      key,
-      dishData.value.map((dish) => ({
-        name: dish.name,
-        id: dish.id,
-        price: dish.price,
-        payer: dish.payer,
-        whoEat: dish.whoEat,
-        whoEatMatrix: dish.whoEatMatrix,
-      }))
-    );
+    saveToLocalStorage(key,dishData.value)
   }
-  //saveToLocalStorage(keyTotalPrice, totalPrice.value);
   loadUsersData();
 });
 
 onUpdated(() => {
   loadUsersData();
 });
-
-const saveToLocalStorage = (key, data) => {
-  localStorage.setItem(key, JSON.stringify(data));
-};
-
-const loadFromLocalStorage = (key) => {
-  const data = localStorage.getItem(key);
-  return data ? JSON.parse(data) : null;
-};
 
 const loadUsersData = () => {
   userStore.deleteAllDishes;
@@ -99,13 +75,7 @@ const loadUsersData = () => {
     totalPrice.value = dataTotal;
   }
   for (let i = 0; i < dishData.value.length; i++) {
-    userStore.addUserDish(
-      dishData.value[i].name,
-      dishData.value[i].price,
-      dishData.value[i].payer,
-      dishData.value[i].whoEat,
-      dishData.value[i].whoEatMatrix
-    );
+    userStore.addUserDish(dishData.value[i]);
   }
 };
 
@@ -119,10 +89,11 @@ const updateDishData = (index, newVal) => {
   totalPrice.value = Number(totalPrice.value) + Number(newVal[1]);
   saveToLocalStorage(key, dishData.value);
   saveToLocalStorage(keyTotalPrice, totalPrice.value);
-  updateIsDishessAdd();
+  isRigt.value = dishData.value[index].price > 0 && parseInt(dishData.value[index].price) == dishData.value[index].price && dishData.value[index].payer != '' &&  dishData.value[index].whoEat.length != 0;
 };
 
 const totalPrice = ref(loadFromLocalStorage(keyTotalPrice) || 0);
+
 const dishData = ref(
   loadFromLocalStorage(key) || [
     {
@@ -137,7 +108,7 @@ const dishData = ref(
 );
 
 // добавление нового блюда (выделение места в массиве для v-for)
-const addDish = () => {
+const onClickAddDish = () => {
   const newDishId = uuidv4();
   dishData.value.push({
     id: newDishId,
@@ -158,43 +129,28 @@ const handleDeleteDish = (indexToDelete) => {
     dishData.value.splice(indexToDelete, 1);
     saveToLocalStorage(key, dishData.value);
     saveToLocalStorage(keyTotalPrice, totalPrice.value);
-    updateIsDishessAdd();
   }
   if (dishData.value.length === 0) {
     totalPrice.value = 0;
     saveToLocalStorage(keyTotalPrice, totalPrice.value);
-    updateIsDishessAdd();
   }
 };
 
-const updateIsDishessAdd = () => {
-  if (dishData.value.length >= 1) {
-    isDishesAdd.value = true;
-  } else {
-    isDishesAdd.value = false;
-  }
-};
-
-
-const clickCalculationPage = () => {
+const onClickCalculationPage = () => {
   isTouchNextPage.value = true;
   router.push({ name: "calculation" })
+  if (userStore.matrixForTotal.length === 0){
+    userStore.initMatrixForTotal(userStore.onlyUserNames.length)
+  }
 };
 
-const getTotalPrice = computed(() => {
-  return dishData.value
-    ? dishData.value.reduce((acc, dish) => acc + parseFloat(dish.price), 0)
-    : 0;
+const totalPriceOnDisplay = computed(() => {
+  return dishData.value.reduce((acc, dish) => (isNaN(parseFloat(dish.price)) || parseFloat(dish.price) < 0) ? null : acc + parseFloat(dish.price), 0);
+});
+
+const isDishesAdd = computed(() => {
+  return dishData.value.length >= 1;
 });
 </script>
 
-<style scoped lang="scss">
-.v-btn {
-  margin: {
-    left: 5px;
-    right: 5px;
-  }
-  width: 12em;
-}
-</style>
 

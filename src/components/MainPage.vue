@@ -2,28 +2,35 @@
   <v-container>
     <v-card>
       <label class="text-center">Добавить гостя</label>
-      <v-btn @click="addUser" icon="mdi-account-plus" color="background" />
+      <v-btn 
+        @click="onClickAddUser" 
+        icon="mdi-account-plus" 
+        color="background" 
+      />
       <add-user-component
         v-for="(userArr, index) in usersArrs"
         :key="userArr.id"
         :index="index"
-        :propsName="userArr.name"
-        @update:propsName="(newVal) => updateUsersArrs(index, newVal)"
+        :props-name="userArr.name"
+        @update:props-name="(newVal) => updateUsersArrs(index, newVal)"
         @deleteUser="handleDeleteUser(index)"
       />
-      <v-btn v-if="isUsersAdd" @click="clickNextPage">Далее</v-btn>
-      <v-btn v-else disabled @click="clickNextPage">Далее</v-btn>
+      <v-btn 
+        text="Далее"
+        :disabled="!isUsersAdd"
+        @click="onClickNextPage"
+      />
     </v-card>
   </v-container>
 </template>
 
 <script setup>
-import { onMounted, onUpdated } from "vue";
+import { onMounted, onUpdated, ref } from "vue";
 import { v4 as uuidv4 } from "uuid";
 import { useRouter } from "vue-router";
-import { ref } from "vue";
 import addUserComponent from "./AddUserComponent.vue";
 import { useAppStore } from "@/store/users.js";
+import {saveToLocalStorage, loadFromLocalStorage} from "@/localStore.js";
 const router = useRouter();
 const userStore = useAppStore();
 const isUsersAdd = ref(false);
@@ -43,18 +50,6 @@ onUpdated(() => {
   loadUsersData();
   updateIsUsersAdd();
 });
-
-//сохраняем данные в localStorage
-const saveToLocalStorage = (key, data) => {
-  localStorage.setItem(key, JSON.stringify(data));
-};
-
-// Загрузка из localStorage
-const loadFromLocalStorage = (key) => {
-  //localStorage.clear()
-  const data = localStorage.getItem(key);
-  return data ? JSON.parse(data) : null;
-};
 
 //вышружаем данные из localStorage
 const loadUsersData = () => {
@@ -83,13 +78,14 @@ const usersArrs = ref(
 );
 
 // добавление нового пользователя (выделение места в массиве для v-for)
-const addUser = () => {
+const onClickAddUser = () => {
   usersArrs.value.push({
     id: uuidv4(),
     name: "",
   });
   // Сохранение данных в localStorage после добавления пользователя
   saveToLocalStorage(key, usersArrs.value);
+  isUsersAdd.value = false; 
 };
 
 // удаление введенного пользователя
@@ -103,14 +99,16 @@ const handleDeleteUser = (indexToDelete) => {
 };
 
 const updateIsUsersAdd = () => {
-  if (usersArrs.value.length > 1) {
-    isUsersAdd.value = true;
-  } else {
-    isUsersAdd.value = false;
+  let count = 0;
+  for (let i = 0; i < usersArrs.value.length; i++){
+    if (usersArrs.value[i].name != ''){
+      count++;
+    }
   }
+  isUsersAdd.value = usersArrs.value.length > 1 && count === usersArrs.value.length;
 };
 
-const clickNextPage = () => {
+const onClickNextPage = () => {
   userStore.deleteAllNames();
   for (let i = 0; i < usersArrs.value.length; i++) {
     userStore.addUserName(usersArrs.value[i]);

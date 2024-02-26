@@ -2,19 +2,26 @@
   <v-container>
     <v-card class="v-card-dish">
       <div class="v-card-text-field">
-        <v-text-field variant="solo" label="Название" v-model="dataDish.name" />
+        <v-text-field 
+          v-model="dataDish.name" 
+          variant="solo" 
+          label="Название" 
+          class="text-field-style"
+        />
         <v-text-field
-          variant="solo"
-          label="Цена"
           v-model="dataDish.price"
           :rules="rules"
+          variant="solo"
+          label="Цена"
+          class="text-field-style"
         />
         <v-select
-          v-model="setDataDishPayer"
+          v-model="dataDishPayer"
           :items="userData.map((x) => x.name)"
           variant="solo"
           density="default"
           label="Кто платил"
+          class="text-field-style"
         />
       </div>
       <div class="v-card-btn">
@@ -27,14 +34,23 @@
           rounded="1"
           density="default"
         >
-          <div v-for="(user, index) in userData" :key="index" class="in-row">
-            <v-btn @click="whoEatRecord">{{ user.name }}</v-btn>
+          <div 
+            v-for="(user, index) in userData" 
+            :key="index" 
+            class="in-row"
+          >
+            <v-btn 
+              @click="onClickWhoEatRecord"
+              class="button-style"
+            >
+              {{ user.name }}
+            </v-btn>
           </div>
         </v-btn-toggle>
         <div>
           <v-btn
-            @click="deleteDish"
-            class="delete-btn"
+            @click="onClickDeleteDish"
+            class="button-style"
             color="secondary"
             icon="mdi-knife"
           />
@@ -46,18 +62,12 @@
   
 <script setup>
 import { useAppStore } from "@/store/users.js";
-import { onMounted, computed } from "vue";
-import { ref, watch, toRefs } from "vue";
+import { ref, watch, toRefs, onMounted, computed } from "vue";
 const userStore = useAppStore();
 const userData = ref([]);
 const dishName = ref([]);
-const dishPrice = ref([]);
-const whoPay = ref([]);
-const whoEat = ref([]);
-const whoEatMatrix = ref([]);
 const toggleMultiple = ref([]);
 const matrixForTotal = ref([]);
-//const dataDish = ref(JSON.parse(JSON.stringify(props.propsDishData)));
 const dataDish = ref(props.propsDishData);
 const emits = defineEmits(["deleteDish", "update:propsDishData"]);
 const props = defineProps({
@@ -123,11 +133,12 @@ onMounted(() => {
   });
 });
 
-const deleteDish = () => {
+const onClickDeleteDish = () => {
   emits("deleteDish");
   userStore.deleteDish(dishName.value);
 };
-const whoEatRecord = () => {
+
+const onClickWhoEatRecord = () => {
   dataDish.value.whoEat = [];
   dataDish.value.whoEatMatrix = dataDish.value.whoEatMatrix.map((x) => 0);
   for (let i = 0; i < toggleMultiple.value.length; i++) {
@@ -146,13 +157,12 @@ watch(
 
 const rules = [
   (v) => !!v || "Это поле обязательно",
-  (v) => (v && v >= 0) || "Цена не может быть отрицательной",
-  (v) => v > 0 || "Значение не может быть отрицательным или равным 0",
   (v) =>
     (!isNaN(parseFloat(v)) && isFinite(v)) || "Значение должно быть числом",
+  (v) => (v && v > 0) || "Цена не может быть отрицательной или равной 0",
 ];
 
-const setDataDishPayer = computed({
+const dataDishPayer = computed({
   get: () => dataDish.value.payer?.name,
   set: (value) => {
     const newData = userData.value.find((obj) => obj.name === value);
@@ -162,9 +172,12 @@ const setDataDishPayer = computed({
 
 const { propsIsTouchNextPage } = toRefs(props);
 
-watch(propsIsTouchNextPage, function () {
+watch(
+  propsIsTouchNextPage,
+  () => {
   saveDish();
-});
+  }
+);
 
 const saveDish = () => {
   if (dataDish.value.payer) {
@@ -183,11 +196,7 @@ const saveDish = () => {
     if (dataDish.value.whoEat.length) {
       const result = dataDish.value.price / dataDish.value.whoEat.length;
       dataDish.value.whoEatMatrix.forEach((value, i) => {
-        if (value === 1) {
-          matrixForTotal.value[i][indexPayer] = result;
-        } else {
-          matrixForTotal.value[i][indexPayer] = 0;
-        }
+        matrixForTotal.value[i][indexPayer] = (value === 1) ? result : 0;
       });
     }
 
@@ -197,14 +206,14 @@ const saveDish = () => {
 </script>
 
 <style scoped lang="scss">
-.v-text-field {
+.text-field-style{
   margin: {
     top: 5px;
     left: 5px;
     right: 5px;
   }
 }
-.v-btn {
+ .button-style {
   margin: {
     left: 5px;
     right: 5px;

@@ -41,7 +41,7 @@ export default defineConfig({
       '.mjs',
       '.ts',
       '.tsx',
-      '.vue',
+      '.vue'
     ]
   },
   server: {
